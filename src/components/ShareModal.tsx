@@ -1,0 +1,96 @@
+"use client";
+
+import React, { useState } from 'react';
+import Modal from './Modal';
+import { Copy, Check, Facebook, Twitter, Linkedin, Mail } from 'lucide-react';
+
+interface ShareModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  url: string;
+  projectName: string;
+}
+
+export default function ShareModal({ isOpen, onClose, url, projectName }: ShareModalProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const encodedUrl = encodeURIComponent(url);
+  const encodedText = encodeURIComponent(`Check out our project "${projectName}" on SaaS Manager!`);
+
+  const shareLinks = {
+    whatsapp: `https://wa.me/?text=${encodedText} ${encodedUrl}`,
+    twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    email: `mailto:?subject=Project Invitation: ${projectName}&body=${encodedText} ${encodedUrl}`
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Share Project">
+      <div className="space-y-6">
+        <div>
+          <label className="text-sm font-medium mb-2 block">Copy Link</label>
+          <div className="flex items-center gap-2">
+            <input 
+              readOnly 
+              value={url} 
+              className="flex h-10 w-full rounded-md border border-input bg-muted/50 px-3 py-2 text-sm text-muted-foreground focus-visible:outline-none"
+            />
+            <button 
+              onClick={handleCopy}
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+              title="Copy to clipboard"
+            >
+              {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium mb-3 block">Share via</label>
+          <div className="flex gap-3">
+            <a 
+              href={shareLinks.whatsapp} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white hover:opacity-90 transition-opacity shadow-sm"
+              title="WhatsApp"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+            <a 
+              href={shareLinks.twitter} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-white hover:opacity-80 transition-opacity shadow-sm"
+              title="X (Twitter)"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a 
+              href={shareLinks.linkedin} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0a66c2] text-white hover:opacity-90 transition-opacity shadow-sm"
+              title="LinkedIn"
+            >
+              <Linkedin className="h-5 w-5 fill-current" />
+            </a>
+            <a 
+              href={shareLinks.email} 
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-muted-foreground text-primary-foreground hover:opacity-90 transition-opacity shadow-sm"
+              title="Email"
+            >
+              <Mail className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  );
+}

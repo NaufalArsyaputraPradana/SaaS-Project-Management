@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?
+  avatar        String?
+  createdAt     DateTime  @default(now())
+
+  workspaces      WorkspaceMember[]
+  projects        ProjectMember[]
+  cardsAssigned   CardAssignee[]
+  comments        Comment[]
+  attachments     Attachment[]
+  notifications   Notification[]
+}
+
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  logo        String?
+  ownerId     String
+  createdAt   DateTime @default(now())
+
+  members     WorkspaceMember[]
+  projects    Project[]
+  invitations Invitation[]
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model WorkspaceMember {
+  userId      String
+  workspaceId String
+  role        Role     @default(MEMBER)
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, workspaceId])
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  color       String?
+  visibility  String    @default("PRIVATE") // PUBLIC_IN_WORKSPACE or PRIVATE
+  createdAt   DateTime  @default(now())
+  
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  members     ProjectMember[]
+  columns     Column[]
+  cards       Card[]
+  labels      Label[]
+}
+
+model ProjectMember {
+  userId    String
+  projectId String
+  role      Role     @default(MEMBER)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([userId, projectId])
+}
+
+model Column {
+  id        String    @id @default(cuid())
+  name      String
+  order     Int
+  projectId String
+
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  cards     Card[]
+}
+
+model Card {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  priority    String    @default("LOW") // URGENT, HIGH, MEDIUM, LOW
+  dueDate     DateTime?
+  order       Int
+  createdById String
+
+  columnId    String
+  projectId   String
+
+  column      Column    @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  assignees   CardAssignee[]
+  labels      CardLabel[]
+  comments    Comment[]
+  attachments Attachment[]
+  checklists  ChecklistItem[]
+}
+
+model CardAssignee {
+  cardId String
+  userId String
+
+  card   Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([cardId, userId])
+}
+
+model Label {
+  id        String   @id @default(cuid())
+  name      String
+  color     String
+  projectId String
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  cards     CardLabel[]
+}
+
+model CardLabel {
+  cardId  String
+  labelId String
+
+  card    Card  @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  label   Label @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([cardId, labelId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  cardId    String
+  userId    String
+
+  card      Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Attachment {
+  id     String @id @default(cuid())
+  url    String
+  cardId String
+  userId String
+
+  card   Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChecklistItem {
+  id      String  @id @default(cuid())
+  content String
+  checked Boolean @default(false)
+  cardId  String
+
+  card    Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id       String    @id @default(cuid())
+  type     String
+  content  String
+  readAt   DateTime?
+  userId   String
+
+  user     User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Invitation {
+  id          String   @id @default(cuid())
+  email       String
+  token       String   @unique
+  role        Role     @default(MEMBER)
+  expiresAt   DateTime
+  usedAt      DateTime?
+  
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
