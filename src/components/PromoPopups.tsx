@@ -13,8 +13,8 @@ export default function PromoPopups() {
   useEffect(() => {
     let smallTimeoutId: NodeJS.Timeout;
 
-    // Aktif di halaman root / beranda jika belum di-close
-    if (pathname === '/' && typeof window !== 'undefined' && !localStorage.getItem('promo_closed')) {
+    // Aktif di semua halaman jika belum di-close
+    if (typeof window !== 'undefined' && !localStorage.getItem('promo_closed')) {
       setShowSmall(false);
       smallTimeoutId = setTimeout(() => {
         setShowSmall(true);
@@ -32,8 +32,8 @@ export default function PromoPopups() {
     let largeTimeoutId: NodeJS.Timeout;
     let largeIntervalId: NodeJS.Timeout;
 
-    // Aktif di halaman root / beranda
-    if (pathname === '/' && typeof window !== 'undefined' && !sessionStorage.getItem('large_promo_closed')) {
+    // Aktif di semua halaman
+    if (typeof window !== 'undefined' && !sessionStorage.getItem('large_promo_closed')) {
       setShowLarge(false);
       largeTimeoutId = setTimeout(() => {
         setShowLarge(true);
