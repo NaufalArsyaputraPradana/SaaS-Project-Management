@@ -90,8 +90,8 @@ export default function GoogleTranslate() {
         }
       }
       
-      // Jika belum ketemu, coba lagi hingga 5x (jeda 500ms)
-      if (!found && attempts < 5) {
+      // Jika belum ketemu, coba lagi hingga 10x (jeda 500ms)
+      if (!found && attempts < 10) {
         setTimeout(() => checkAndTranslate(attempts + 1), 500);
       }
     };
@@ -123,7 +123,7 @@ export default function GoogleTranslate() {
         title="Ubah Bahasa / Translate"
       >
         <canvas id="flagCanvasGlobal" width="20" height="15" className="rounded-sm"></canvas>
-        <span>{currentLang === 'id' ? 'ID' : 'EN'}</span>
+        <span className="notranslate w-6 text-center">{currentLang === 'id' ? 'ID' : 'EN'}</span>
       </button>
     </div>
   );
