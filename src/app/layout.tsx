@@ -4,7 +4,6 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import PromoPopups from "@/components/PromoPopups";
 import GoogleTranslate from "@/components/GoogleTranslate";
-import ThemeToggle from "@/components/ThemeToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +34,6 @@ export default function RootLayout({
           {children}
           <PromoPopups />
           <GoogleTranslate />
-          <ThemeToggle />
         </Providers>
       </body>
     </html>

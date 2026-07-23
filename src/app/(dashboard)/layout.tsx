@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import UserNav from "@/components/UserNav";
 import NotificationBell from "@/components/NotificationBell";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 import { SidebarNav } from "@/components/SidebarNav";
 import prisma from "@/lib/prisma";
 

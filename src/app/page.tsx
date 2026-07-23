@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, LayoutDashboard, CheckCircle2 } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
             <span className="text-xl font-bold tracking-tight">SaaS<span className="text-primary">Manage</span></span>
           </div>
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <Link 
               href="/dashboard"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
