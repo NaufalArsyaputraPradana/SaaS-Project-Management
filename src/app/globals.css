@@ -66,3 +66,25 @@
     @apply bg-black/40 border-white/5;
   }
 }
+
+/* Sembunyikan Google Translate Toolbar (Header Banner) */
+.goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon {
+  display: none !important;
+}
+/* Hilangkan margin atas (ruang kosong) yang ditambahkan Google Translate */
+body {
+  top: 0px !important;
+}
+/* Sembunyikan tooltip (kotak teks asli yang muncul saat hover) */
+.goog-tooltip {
+  display: none !important;
+}
+.goog-tooltip:hover {
+  display: none !important;
+}
+/* Hilangkan warna background kuning/highlight pada teks yang diterjemahkan */
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important; 
+  box-shadow: none !important;
+}
