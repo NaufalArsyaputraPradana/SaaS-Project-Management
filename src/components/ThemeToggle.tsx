@@ -1,21 +1,31 @@
 "use client";
 
-import * as React from "react";
-import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export function ThemeToggle() {
-  const { setTheme, theme } = useTheme();
+export default function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only rendering after mount
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return <div className="fixed bottom-6 right-6 w-12 h-12"></div>;
+  }
 
   return (
     <button
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="relative rounded-full h-8 w-8 flex items-center justify-center hover:bg-accent text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-      title="Toggle theme"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="fixed bottom-6 right-6 z-[60] flex items-center justify-center w-12 h-12 rounded-full bg-slate-900 border border-blue-500/30 shadow-2xl shadow-blue-900/40 hover:shadow-blue-500/50 hover:scale-105 transition-all text-slate-200"
+      title="Ubah Tema Gelap/Terang"
     >
-      <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
+      {theme === "dark" ? (
+        <Sun size={20} className="text-yellow-400" />
+      ) : (
+        <Moon size={20} className="text-blue-400" />
+      )}
     </button>
   );
 }
