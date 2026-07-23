@@ -68,7 +68,9 @@
 }
 
 /* Sembunyikan Google Translate Toolbar (Header Banner) */
-.goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon {
+.goog-te-banner-frame.skiptranslate, 
+.goog-te-gadget-icon,
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
   display: none !important;
 }
 /* Hilangkan margin atas (ruang kosong) yang ditambahkan Google Translate */
